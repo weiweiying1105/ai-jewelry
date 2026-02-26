@@ -7,7 +7,7 @@ import DirectionSelector from '../components/DirectionSelector';
 import TestPage from '../components/TestPage';
 import ResultPage from '../components/ResultPage';
 import { calculateChineseCalendar, formatChineseDate } from '../utils/ChineseCalendar';
-import { getAIRecommendation } from '../utils/AIRecommendation';
+import { getAIRecommendation, Recommendation } from '@/utils/AIRecommendation';
 
 type PageState = 'verification' | 'birthday' | 'direction' | 'test' | 'result' | 'loading';
 
@@ -17,8 +17,21 @@ export default function Home() {
   const [direction, setDirection] = useState<string>('');
   const [answers, setAnswers] = useState<number[]>([]);
   const [birthday, setBirthday] = useState<string>('');
-  const [recommendation, setRecommendation] = useState<string>('');
-
+  const [recommendation, setRecommendation] = useState<Recommendation>({
+    coreConclusion: {
+      tags: [],
+      insight: ''
+    },
+    personality: '',
+    fatePattern: '',
+    psychologicalAnalysis: {
+      currentState: '',
+      personalityDuality: '',
+      logicConnection: ''
+    },
+    transportationAdvice: '',
+    jewelryDecision: ''
+  });
   const handleVerify = () => {
     setPageState('birthday');
   };
@@ -53,7 +66,22 @@ export default function Home() {
       setPageState('result');
     } catch (error) {
       console.error('Error getting recommendation:', error);
-      setRecommendation('推荐生成失败，请重试');
+      setRecommendation({
+        coreConclusion: {
+          tags: [],
+          insight: ''
+        },
+        personality: '',
+        fatePattern: '',
+        psychologicalAnalysis: {
+          currentState: '',
+          personalityDuality: '',
+          logicConnection: ''
+        },
+        transportationAdvice: '',
+        jewelryDecision: '',
+        error: '推荐生成失败，请重试'
+      });
       setPageState('result');
     }
   };

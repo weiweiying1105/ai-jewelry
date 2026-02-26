@@ -118,132 +118,140 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userInfo, answe
       <div className="w-full max-w-4xl bg-white rounded-lg shadow-md p-8">
         <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">您的专属首饰推荐</h1>
         
-        {/* 核心结论：开运守护石 */}
-        <div className="mb-10">
-          <h2 className="text-2xl font-bold mb-4 text-center text-blue-800">核心结论：您的「开运守护石」</h2>
-          
-          <div className="flex flex-col items-center gap-6 mb-6">
-            <div className="w-full space-y-4">
-              <div className="flex flex-wrap gap-2 justify-center">
-                {tags.map((tag, index) => (
-                  <span key={index} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                    {tag}
-                  </span>
+        {recommendation.error ? (
+          <div className="text-center text-red-500 mb-8">
+            {recommendation.error}
+          </div>
+        ) : (
+          <>
+            {/* 核心结论：开运守护石 */}
+            <div className="mb-10">
+              <h2 className="text-2xl font-bold mb-4 text-center text-blue-800">核心结论：您的「开运守护石」</h2>
+              
+              <div className="flex flex-col items-center gap-6 mb-6">
+                <div className="w-full space-y-4">
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    {tags.map((tag, index) => (
+                      <span key={index} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="text-lg font-medium text-gray-800 italic border-l-4 border-blue-500 pl-4 py-2 max-w-2xl mx-auto">
+                    {insight}
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* 八字原局分析 */}
+            <div className="mb-10 p-6 bg-gray-50 rounded-lg">
+              <h2 className="text-xl font-bold mb-4 text-gray-800">八字原局分析</h2>
+              <div className="space-y-4">
+                <div>
+                  <h3 className="font-medium text-gray-700 mb-2">基础命盘</h3>
+                  <div className="text-gray-600">{userInfo.chineseCalendar}</div>
+                </div>
+                <div>
+                  <h3 className="font-medium text-gray-700 mb-2">五行能量</h3>
+                  <div className="h-48 bg-white rounded-lg p-4">
+                    {loading ? (
+                      <div className="h-full flex items-center justify-center text-gray-500">加载中...</div>
+                    ) : fiveElementsData ? (
+                      <Radar
+                        data={{
+                          labels: fiveElementsData.map((item: any) => item.element),
+                          datasets: [
+                            {
+                              label: '五行能量',
+                              data: fiveElementsData.map((item: any) => item.value),
+                              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                              borderColor: 'rgba(54, 162, 235, 1)',
+                              borderWidth: 2,
+                              pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                              pointBorderColor: '#fff',
+                              pointHoverBackgroundColor: '#fff',
+                              pointHoverBorderColor: 'rgba(54, 162, 235, 1)',
+                            },
+                          ],
+                        }}
+                        options={{
+                          scales: {
+                            r: {
+                              beginAtZero: true,
+                              max: 100,
+                              ticks: {
+                                stepSize: 20,
+                              },
+                            },
+                          },
+                          plugins: {
+                            legend: {
+                              display: false,
+                            },
+                          },
+                        }}
+                      />
+                    ) : (
+                      <div className="h-full flex items-center justify-center text-gray-500">无法加载五行能量数据</div>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <h3 className="font-medium text-gray-700 mb-2">性格画像</h3>
+                  <div className="text-gray-600">{personalityText}</div>
+                </div>
+                <div>
+                  <h3 className="font-medium text-gray-700 mb-2">命理格局</h3>
+                  <div className="text-gray-600">{fatePatternText}</div>
+                </div>
+              </div>
+            </div>
+            
+            {/* 深度心理行为分析 */}
+            <div className="mb-10 p-6 bg-blue-50 rounded-lg">
+              <h2 className="text-xl font-bold mb-4 text-blue-800">深度心理行为分析</h2>
+              <div className="space-y-4">
+                <div>
+                  <h3 className="font-medium text-blue-700 mb-2">当前状态</h3>
+                  <div className="text-gray-700">{currentStateText}</div>
+                </div>
+                <div>
+                  <h3 className="font-medium text-blue-700 mb-2">性格双面性</h3>
+                  <div className="text-gray-700">{personalityDualityText}</div>
+                </div>
+                <div>
+                  <h3 className="font-medium text-blue-700 mb-2">逻辑关联</h3>
+                  <div className="text-gray-700">{logicConnectionText}</div>
+                </div>
+              </div>
+            </div>
+            
+            {/* 专属转运建议 */}
+            <div className="mb-10 p-6 bg-green-50 rounded-lg">
+              <h2 className="text-xl font-bold mb-4 text-green-800">专属转运建议</h2>
+              <div className="text-gray-700 space-y-3">
+                {recommendationParagraphs.map((paragraph, index) => (
+                  <p key={index} className="leading-relaxed">
+                    {paragraph}
+                  </p>
                 ))}
               </div>
-              <div className="text-lg font-medium text-gray-800 italic border-l-4 border-blue-500 pl-4 py-2 max-w-2xl mx-auto">
-                {insight}
+            </div>
+            
+            {/* 首饰定案与材质解读 */}
+            <div className="mb-10 p-6 bg-purple-50 rounded-lg">
+              <h2 className="text-xl font-bold mb-4 text-purple-800">首饰定案与材质解读</h2>
+              <div className="text-gray-700 space-y-3">
+                {jewelryDecisionText.split('\n').filter(p => p.trim() !== '').map((paragraph, index) => (
+                  <p key={index} className="leading-relaxed">
+                    {paragraph}
+                  </p>
+                ))}
               </div>
             </div>
-          </div>
-        </div>
-        
-        {/* 八字原局分析 */}
-        <div className="mb-10 p-6 bg-gray-50 rounded-lg">
-          <h2 className="text-xl font-bold mb-4 text-gray-800">八字原局分析</h2>
-          <div className="space-y-4">
-            <div>
-              <h3 className="font-medium text-gray-700 mb-2">基础命盘</h3>
-              <div className="text-gray-600">{userInfo.chineseCalendar}</div>
-            </div>
-            <div>
-              <h3 className="font-medium text-gray-700 mb-2">五行能量</h3>
-              <div className="h-48 bg-white rounded-lg p-4">
-                {loading ? (
-                  <div className="h-full flex items-center justify-center text-gray-500">加载中...</div>
-                ) : fiveElementsData ? (
-                  <Radar
-                    data={{
-                      labels: fiveElementsData.map((item: any) => item.element),
-                      datasets: [
-                        {
-                          label: '五行能量',
-                          data: fiveElementsData.map((item: any) => item.value),
-                          backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                          borderColor: 'rgba(54, 162, 235, 1)',
-                          borderWidth: 2,
-                          pointBackgroundColor: 'rgba(54, 162, 235, 1)',
-                          pointBorderColor: '#fff',
-                          pointHoverBackgroundColor: '#fff',
-                          pointHoverBorderColor: 'rgba(54, 162, 235, 1)',
-                        },
-                      ],
-                    }}
-                    options={{
-                      scales: {
-                        r: {
-                          beginAtZero: true,
-                          max: 100,
-                          ticks: {
-                            stepSize: 20,
-                          },
-                        },
-                      },
-                      plugins: {
-                        legend: {
-                          display: false,
-                        },
-                      },
-                    }}
-                  />
-                ) : (
-                  <div className="h-full flex items-center justify-center text-gray-500">无法加载五行能量数据</div>
-                )}
-              </div>
-            </div>
-            <div>
-              <h3 className="font-medium text-gray-700 mb-2">性格画像</h3>
-              <div className="text-gray-600">{personalityText}</div>
-            </div>
-            <div>
-              <h3 className="font-medium text-gray-700 mb-2">命理格局</h3>
-              <div className="text-gray-600">{fatePatternText}</div>
-            </div>
-          </div>
-        </div>
-        
-        {/* 深度心理行为分析 */}
-        <div className="mb-10 p-6 bg-blue-50 rounded-lg">
-          <h2 className="text-xl font-bold mb-4 text-blue-800">深度心理行为分析</h2>
-          <div className="space-y-4">
-            <div>
-              <h3 className="font-medium text-blue-700 mb-2">当前状态</h3>
-              <div className="text-gray-700">{currentStateText}</div>
-            </div>
-            <div>
-              <h3 className="font-medium text-blue-700 mb-2">性格双面性</h3>
-              <div className="text-gray-700">{personalityDualityText}</div>
-            </div>
-            <div>
-              <h3 className="font-medium text-blue-700 mb-2">逻辑关联</h3>
-              <div className="text-gray-700">{logicConnectionText}</div>
-            </div>
-          </div>
-        </div>
-        
-        {/* 专属转运建议 */}
-        <div className="mb-10 p-6 bg-green-50 rounded-lg">
-          <h2 className="text-xl font-bold mb-4 text-green-800">专属转运建议</h2>
-          <div className="text-gray-700 space-y-3">
-            {recommendationParagraphs.map((paragraph, index) => (
-              <p key={index} className="leading-relaxed">
-                {paragraph}
-              </p>
-            ))}
-          </div>
-        </div>
-        
-        {/* 首饰定案与材质解读 */}
-        <div className="mb-10 p-6 bg-purple-50 rounded-lg">
-          <h2 className="text-xl font-bold mb-4 text-purple-800">首饰定案与材质解读</h2>
-          <div className="text-gray-700 space-y-3">
-            {jewelryDecisionText.split('\n').filter(p => p.trim() !== '').map((paragraph, index) => (
-              <p key={index} className="leading-relaxed">
-                {paragraph}
-              </p>
-            ))}
-          </div>
-        </div>
+          </>
+        )}
         
         <div className="text-center">
           <button
