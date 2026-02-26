@@ -27,6 +27,7 @@ interface ResultPageProps {
     };
     transportationAdvice: string;
     jewelryDecision: string;
+    error?: string;
   };
   userInfo: {
     direction: string;
@@ -50,7 +51,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userInfo, answe
   // 五行能量数据状态
   const [fiveElementsData, setFiveElementsData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  
+
   // 获取五行能量数据
   useEffect(() => {
     const fetchFiveElementsData = async () => {
@@ -73,7 +74,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userInfo, answe
         setLoading(false);
       }
     };
-    
+
     fetchFiveElementsData();
   }, [userInfo.chineseCalendar]);
 
@@ -117,7 +118,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userInfo, answe
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-50">
       <div className="w-full max-w-4xl bg-white rounded-lg shadow-md p-8">
         <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">您的专属首饰推荐</h1>
-        
+
         {recommendation.error ? (
           <div className="text-center text-red-500 mb-8">
             {recommendation.error}
@@ -127,7 +128,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userInfo, answe
             {/* 核心结论：开运守护石 */}
             <div className="mb-10">
               <h2 className="text-2xl font-bold mb-4 text-center text-blue-800">核心结论：您的「开运守护石」</h2>
-              
+
               <div className="flex flex-col items-center gap-6 mb-6">
                 <div className="w-full space-y-4">
                   <div className="flex flex-wrap gap-2 justify-center">
@@ -143,7 +144,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userInfo, answe
                 </div>
               </div>
             </div>
-            
+
             {/* 八字原局分析 */}
             <div className="mb-10 p-6 bg-gray-50 rounded-lg">
               <h2 className="text-xl font-bold mb-4 text-gray-800">八字原局分析</h2>
@@ -207,7 +208,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userInfo, answe
                 </div>
               </div>
             </div>
-            
+
             {/* 深度心理行为分析 */}
             <div className="mb-10 p-6 bg-blue-50 rounded-lg">
               <h2 className="text-xl font-bold mb-4 text-blue-800">深度心理行为分析</h2>
@@ -226,7 +227,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userInfo, answe
                 </div>
               </div>
             </div>
-            
+
             {/* 专属转运建议 */}
             <div className="mb-10 p-6 bg-green-50 rounded-lg">
               <h2 className="text-xl font-bold mb-4 text-green-800">专属转运建议</h2>
@@ -238,7 +239,134 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userInfo, answe
                 ))}
               </div>
             </div>
-            
+
+            {/* 首饰定案与材质解读 */}
+            <div className="mb-10 p-6 bg-purple-50 rounded-lg">
+              <h2 className="text-xl font-bold mb-4 text-purple-800">首饰定案与材质解读</h2>
+              <div className="text-gray-700 space-y-3">
+                {jewelryDecisionText.split('\n').filter(p => p.trim() !== '').map((paragraph, index) => (
+                  <p key={index} className="leading-relaxed">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </div>
+
+            {/* 八字原局分析 */}
+            <div className="mb-10 bg-white dark:bg-slate-900/50 rounded-2xl p-6 border border-slate-200 dark:border-slate-800">
+              <div className="flex justify-between items-start mb-6">
+                <div>
+                  <h3 className="text-slate-500 dark:text-slate-400 text-sm font-medium">Bazi Analysis</h3>
+                  <p className="text-slate-900 dark:text-slate-100 text-xl font-bold">
+                    {userInfo.chineseCalendar || '命盘分析'}
+                  </p>
+                </div>
+                <div className="bg-indigo-100 dark:bg-indigo-900/30 p-2 rounded-lg">
+                  <span className="material-symbols-outlined text-indigo-600 dark:text-indigo-300">analytics</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                {/* 雷达图区域（左） */}
+                <div className="aspect-square relative flex items-center justify-center">
+                  <div className="absolute inset-0 border-[1px] border-indigo-500/10 rounded-full opacity-20"></div>
+                  <div className="w-full h-full flex items-center justify-center">
+                    <div className="w-4/5 h-4/5 border-2 border-indigo-500/40 rounded-full relative flex items-center justify-center">
+                      <div className="absolute inset-0 flex items-center justify-center p-4">
+                        {loading ? (
+                          <div className="text-gray-500">加载中...</div>
+                        ) : fiveElementsData ? (
+                          <Radar
+                            data={{
+                              labels: fiveElementsData.map((item: any) => item.element),
+                              datasets: [
+                                {
+                                  label: '五行能量',
+                                  data: fiveElementsData.map((item: any) => item.value),
+                                  backgroundColor: 'rgba(127, 19, 236, 0.25)',
+                                  borderColor: 'rgba(127, 19, 236, 0.8)',
+                                  borderWidth: 2,
+                                  pointBackgroundColor: 'rgba(127, 19, 236, 0.9)',
+                                  pointBorderColor: '#fff',
+                                  pointHoverBackgroundColor: '#fff',
+                                  pointHoverBorderColor: 'rgba(127, 19, 236, 0.9)',
+                                },
+                              ],
+                            }}
+                            options={{
+                              scales: {
+                                r: {
+                                  beginAtZero: true,
+                                  max: 100,
+                                  ticks: { stepSize: 20, showLabelBackdrop: false },
+                                  grid: { color: 'rgba(127, 19, 236, 0.15)' },
+                                  angleLines: { color: 'rgba(127, 19, 236, 0.15)' },
+                                },
+                              },
+                              plugins: { legend: { display: false } },
+                            }}
+                          />
+                        ) : (
+                          <div className="text-gray-500">无法加载五行能量数据</div>
+                        )}
+                      </div>
+                      <span className="absolute -top-6 text-[10px] font-bold text-indigo-600">FIRE</span>
+                      <span className="absolute -right-6 top-1/3 text-[10px] font-bold text-slate-400">EARTH</span>
+                      <span className="absolute -bottom-6 right-4 text-[10px] font-bold text-slate-400">METAL</span>
+                      <span className="absolute -bottom-6 left-4 text-[10px] font-bold text-slate-400">WATER</span>
+                      <span className="absolute -left-6 top-1/3 text-[10px] font-bold text-slate-400">WOOD</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 右侧文案区域 */}
+                <div className="space-y-4">
+                  <div className="border-l-4 border-indigo-600 pl-4">
+                    <h4 className="text-sm font-bold text-indigo-600 uppercase">Personality Portrait</h4>
+                    <p className="text-slate-700 dark:text-slate-300 text-lg font-semibold mt-1">
+                      {userInfo.direction} · 专属画像
+                    </p>
+                  </div>
+                  <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{personalityText}</p>
+                  <div>
+                    <h3 className="font-medium text-gray-700 dark:text-slate-300 mb-2">命理格局</h3>
+                    <div className="text-gray-600 dark:text-slate-400">{fatePatternText}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 深度心理行为分析 */}
+            <div className="mb-10 p-6 bg-blue-50 rounded-lg">
+              <h2 className="text-xl font-bold mb-4 text-blue-800">深度心理行为分析</h2>
+              <div className="space-y-4">
+                <div>
+                  <h3 className="font-medium text-blue-700 mb-2">当前状态</h3>
+                  <div className="text-gray-700">{currentStateText}</div>
+                </div>
+                <div>
+                  <h3 className="font-medium text-blue-700 mb-2">性格双面性</h3>
+                  <div className="text-gray-700">{personalityDualityText}</div>
+                </div>
+                <div>
+                  <h3 className="font-medium text-blue-700 mb-2">逻辑关联</h3>
+                  <div className="text-gray-700">{logicConnectionText}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* 专属转运建议 */}
+            <div className="mb-10 p-6 bg-green-50 rounded-lg">
+              <h2 className="text-xl font-bold mb-4 text-green-800">专属转运建议</h2>
+              <div className="text-gray-700 space-y-3">
+                {recommendationParagraphs.map((paragraph, index) => (
+                  <p key={index} className="leading-relaxed">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </div>
+
             {/* 首饰定案与材质解读 */}
             <div className="mb-10 p-6 bg-purple-50 rounded-lg">
               <h2 className="text-xl font-bold mb-4 text-purple-800">首饰定案与材质解读</h2>
@@ -252,7 +380,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userInfo, answe
             </div>
           </>
         )}
-        
+
         <div className="text-center">
           <button
             onClick={() => window.location.reload()}

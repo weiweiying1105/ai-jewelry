@@ -28,7 +28,7 @@ class DatabaseService {
 
   private async initDatabase() {
     if (!this.pool) return;
-    
+
     try {
       const client = await this.pool.connect();
       await this.createVerificationCodeTable(client);
@@ -48,7 +48,7 @@ class DatabaseService {
         id SERIAL PRIMARY KEY,
         code VARCHAR(10) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        expires_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP + INTERVAL '1 hour'
+        expires_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP + INTERVAL '5 days'
       );
     `;
 
@@ -79,7 +79,7 @@ class DatabaseService {
       // 批量插入数据
       const insertQuery = `
         INSERT INTO verification_codes (code, expires_at)
-        VALUES ${codes.map((code, index) => `($${index + 1}, CURRENT_TIMESTAMP + INTERVAL '1 hour')`).join(', ')}
+        VALUES ${codes.map((code, index) => `($${index + 1}, CURRENT_TIMESTAMP + INTERVAL '5 days')`).join(', ')}
       `;
 
       await client.query(insertQuery, codes);
@@ -90,7 +90,7 @@ class DatabaseService {
   async generateAndStoreCode(): Promise<string> {
     const code = Math.floor(1000 + Math.random() * 9000).toString(); // 4位数字
     const now = new Date();
-    const expiresAt = new Date(now.getTime() + 60 * 60 * 1000); // 1 hour
+    const expiresAt = new Date(now.getTime() + 5 * 24 * 60 * 60 * 1000); // 5 days
 
     if (this.useMemoryStorage || !this.pool) {
       // 使用内存存储
@@ -131,21 +131,21 @@ class DatabaseService {
       return this.verifyCodeFromMemory(code);
     }
 
-    // 使用数据库验证
+    // 使用数据库验证（基于创建时间5天内有效）
     const query = `
       SELECT id FROM verification_codes
-      WHERE code = $1 AND expires_at > CURRENT_TIMESTAMP;
+      WHERE code = $1 AND created_at > CURRENT_TIMESTAMP - INTERVAL '5 days';
     `;
 
     try {
       const result = await this.pool.query(query, [code]);
-      
+
       if (result.rows.length > 0) {
         // 删除已使用的验证码
         await this.pool.query('DELETE FROM verification_codes WHERE id = $1', [result.rows[0].id]);
         return true;
       }
-      
+
       return false;
     } catch (error) {
       console.error('Error verifying code:', error);
@@ -160,8 +160,9 @@ class DatabaseService {
   private verifyCodeFromMemory(code: string): boolean {
     this.cleanupExpiredMemoryCodes();
     const now = new Date();
+    const cutoff = new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000);
     const codeIndex = this.memoryCodes.findIndex(
-      c => c.code === code && c.expiresAt > now
+      c => c.code === code && c.createdAt > cutoff
     );
 
     if (codeIndex !== -1) {
@@ -175,7 +176,8 @@ class DatabaseService {
 
   private cleanupExpiredMemoryCodes() {
     const now = new Date();
-    this.memoryCodes = this.memoryCodes.filter(c => c.expiresAt > now);
+    const cutoff = new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000);
+    this.memoryCodes = this.memoryCodes.filter(c => c.createdAt > cutoff);
   }
 
   async cleanupExpiredCodes() {
@@ -184,8 +186,8 @@ class DatabaseService {
       return;
     }
 
-    const query = 'DELETE FROM verification_codes WHERE expires_at < CURRENT_TIMESTAMP';
-    
+    const query = "DELETE FROM verification_codes WHERE created_at < CURRENT_TIMESTAMP - INTERVAL '5 days'";
+
     try {
       await this.pool.query(query);
     } catch (error) {

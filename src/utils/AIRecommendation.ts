@@ -5,6 +5,7 @@ export interface UserData {
   direction: string;
   answers: number[];
   birthday: string;
+  gender: string;
 }
 
 export interface Recommendation {

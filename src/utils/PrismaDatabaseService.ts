@@ -9,15 +9,15 @@ class PrismaDatabaseService {
     try {
       // 检查是否已有数据
       const count = await prisma.verificationCode.count();
-      
+
       if (count === 0) {
         // 生成10条4位数字的验证码
         const codes = [];
         for (let i = 0; i < 10; i++) {
           const code = Math.floor(1000 + Math.random() * 9000).toString(); // 4位数字
           const expiresAt = new Date();
-          expiresAt.setHours(expiresAt.getHours() + 1); // 1小时后过期
-          
+          expiresAt.setDate(expiresAt.getDate() + 5); // 5 days from now
+
           codes.push({
             code,
             expiresAt
@@ -28,7 +28,7 @@ class PrismaDatabaseService {
         await prisma.verificationCode.createMany({
           data: codes
         });
-        
+
         console.log('Initialized 10 verification codes with Prisma');
       }
     } catch (error) {
@@ -39,10 +39,10 @@ class PrismaDatabaseService {
   async generateAndStoreCode(): Promise<string> {
     // 初始化数据库（如果需要）
     await this.initDatabase();
-    
+
     const code = Math.floor(1000 + Math.random() * 9000).toString(); // 4位数字
     const expiresAt = new Date();
-    expiresAt.setHours(expiresAt.getHours() + 1); // 1小时后过期
+    expiresAt.setDate(expiresAt.getDate() + 5); // 5 days from now
 
     try {
       const result = await prisma.verificationCode.create({
@@ -69,7 +69,7 @@ class PrismaDatabaseService {
           }
         }
       });
-      
+
       if (verificationCode) {
         // 删除已使用的验证码
         await prisma.verificationCode.delete({
@@ -79,7 +79,7 @@ class PrismaDatabaseService {
         });
         return true;
       }
-      
+
       return false;
     } catch (error) {
       console.error('Error verifying code:', error);

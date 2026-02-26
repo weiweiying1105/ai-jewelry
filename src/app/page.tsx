@@ -9,7 +9,10 @@ import ResultPage from '../components/ResultPage';
 import { calculateChineseCalendar, formatChineseDate } from '../utils/ChineseCalendar';
 import { getAIRecommendation, Recommendation } from '@/utils/AIRecommendation';
 
+// 对齐 Direction 类型字符串联合
 type PageState = 'verification' | 'birthday' | 'direction' | 'test' | 'result' | 'loading';
+
+enum StepDirection {}
 
 export default function Home() {
   const [pageState, setPageState] = useState<PageState>('verification');
@@ -17,6 +20,7 @@ export default function Home() {
   const [direction, setDirection] = useState<string>('');
   const [answers, setAnswers] = useState<number[]>([]);
   const [birthday, setBirthday] = useState<string>('');
+  const [gender, setGender] = useState<string>('女');
   const [recommendation, setRecommendation] = useState<Recommendation>({
     coreConclusion: {
       tags: [],
@@ -36,10 +40,11 @@ export default function Home() {
     setPageState('birthday');
   };
 
-  const handleBirthdaySubmit = (year: number, month: number, day: number) => {
+  const handleBirthdaySubmit = (year: number, month: number, day: number, genderValue: string) => {
     const calendarInfo = calculateChineseCalendar(year, month, day);
     setChineseCalendar(calendarInfo);
     setBirthday(`${year}-${month}-${day}`);
+    setGender(genderValue);
     setPageState('direction');
   };
 
@@ -57,7 +62,8 @@ export default function Home() {
       chineseCalendar,
       direction,
       answers: userAnswers,
-      birthday
+      birthday,
+      gender,
     };
     
     try {
@@ -95,7 +101,7 @@ export default function Home() {
       case 'direction':
         return <DirectionSelector onSelect={handleDirectionSelect} />;
       case 'test':
-        return <TestPage onComplete={handleTestComplete} />;
+        return <TestPage direction={direction as any} onComplete={handleTestComplete} />;
       case 'result':
         return (
           <ResultPage

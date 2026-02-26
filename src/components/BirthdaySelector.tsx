@@ -1,19 +1,20 @@
-'use client';
+"use client";
 
 import React, { useState } from 'react';
 
 interface BirthdaySelectorProps {
-  onSubmit: (year: number, month: number, day: number) => void;
+  onSubmit: (year: number, month: number, day: number, gender: string) => void;
 }
 
 const BirthdaySelector: React.FC<BirthdaySelectorProps> = ({ onSubmit }) => {
   const [year, setYear] = useState<number>(new Date().getFullYear());
   const [month, setMonth] = useState<number>(1);
   const [day, setDay] = useState<number>(1);
+  const [gender, setGender] = useState<string>('女');
 
   const years = Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i);
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
-  
+
   const getDaysInMonth = (year: number, month: number) => {
     return new Date(year, month, 0).getDate();
   };
@@ -22,7 +23,7 @@ const BirthdaySelector: React.FC<BirthdaySelectorProps> = ({ onSubmit }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(year, month, day);
+    onSubmit(year, month, day, gender);
   };
 
   return (
@@ -68,6 +69,27 @@ const BirthdaySelector: React.FC<BirthdaySelectorProps> = ({ onSubmit }) => {
               </select>
             </div>
           </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">性别</label>
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                type="button"
+                className={`px-4 py-2 rounded-md border ${gender === '男' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300'}`}
+                onClick={() => setGender('男')}
+              >
+                男
+              </button>
+              <button
+                type="button"
+                className={`px-4 py-2 rounded-md border ${gender === '女' ? 'bg-pink-600 text-white border-pink-600' : 'bg-white text-gray-700 border-gray-300'}`}
+                onClick={() => setGender('女')}
+              >
+                女
+              </button>
+            </div>
+          </div>
+
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition-colors"
