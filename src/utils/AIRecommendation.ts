@@ -12,14 +12,21 @@ export interface Recommendation {
   coreConclusion: {
     tags: string[];
     insight: string;
+    stone?: string;
   };
   personality: string;
-  fatePattern: string;
+  // fatePattern removed to avoid duplication with elements
+  elements?: string[];
+  elementsItems?: { emoji: string; title: string; desc: string }[];
   psychologicalAnalysis: {
     currentState: string;
     personalityDuality: string;
     logicConnection: string;
+    surface?: string;
+    innerCore?: string;
+    truth?: string;
   };
+  recommendations?: { title: string; bullets: string[] }[];
   transportationAdvice: string;
   jewelryDecision: string;
   error?: string;
@@ -36,7 +43,6 @@ export const getAIRecommendation = async (userData: UserData): Promise<Recommend
     });
     const data = await response.json();
     
-    // 如果返回了错误信息
     if (data.error) {
       return {
         coreConclusion: {
@@ -44,7 +50,7 @@ export const getAIRecommendation = async (userData: UserData): Promise<Recommend
           insight: ''
         },
         personality: '',
-        fatePattern: '',
+        elements: [],
         psychologicalAnalysis: {
           currentState: '',
           personalityDuality: '',
@@ -53,20 +59,19 @@ export const getAIRecommendation = async (userData: UserData): Promise<Recommend
         transportationAdvice: '',
         jewelryDecision: '',
         error: data.error
-      };
+      } as Recommendation;
     }
     
-    return data;
+    return data as Recommendation;
   } catch (error) {
     console.error('Error getting AI recommendation:', error);
-    // 返回默认推荐
     return {
       coreConclusion: {
         tags: [],
         insight: ''
       },
       personality: '',
-      fatePattern: '',
+      elements: [],
       psychologicalAnalysis: {
         currentState: '',
         personalityDuality: '',
@@ -75,6 +80,6 @@ export const getAIRecommendation = async (userData: UserData): Promise<Recommend
       transportationAdvice: '',
       jewelryDecision: '',
       error: '很抱歉，推荐生成失败，请稍后重试。建议您根据自己的喜好选择适合的首饰。'
-    };
+    } as Recommendation;
   }
 };

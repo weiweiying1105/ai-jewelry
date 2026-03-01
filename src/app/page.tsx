@@ -12,12 +12,12 @@ import { getAIRecommendation, Recommendation } from '@/utils/AIRecommendation';
 // 对齐 Direction 类型字符串联合
 type PageState = 'verification' | 'birthday' | 'direction' | 'test' | 'result' | 'loading';
 
-enum StepDirection {}
+enum StepDirection { }
 
 export default function Home() {
   const [pageState, setPageState] = useState<PageState>('verification');
   const [chineseCalendar, setChineseCalendar] = useState<any>(null);
-  const [direction, setDirection] = useState<string>('');
+  const [direction, setDirection] = useState<import('../data/questions20').Direction | null>(null);
   const [answers, setAnswers] = useState<number[]>([]);
   const [birthday, setBirthday] = useState<string>('');
   const [gender, setGender] = useState<string>('女');
@@ -48,7 +48,7 @@ export default function Home() {
     setPageState('direction');
   };
 
-  const handleDirectionSelect = (selectedDirection: string) => {
+  const handleDirectionSelect = (selectedDirection: import('../data/questions20').Direction) => {
     setDirection(selectedDirection);
     setPageState('test');
   };
@@ -56,7 +56,7 @@ export default function Home() {
   const handleTestComplete = async (userAnswers: number[]) => {
     setAnswers(userAnswers);
     setPageState('loading');
-    
+
     // 生成AI推荐
     const userData = {
       chineseCalendar,
@@ -65,7 +65,7 @@ export default function Home() {
       birthday,
       gender,
     };
-    
+
     try {
       const aiRecommendation = await getAIRecommendation(userData);
       setRecommendation(aiRecommendation);
@@ -101,13 +101,13 @@ export default function Home() {
       case 'direction':
         return <DirectionSelector onSelect={handleDirectionSelect} />;
       case 'test':
-        return <TestPage direction={direction as any} onComplete={handleTestComplete} />;
+        return direction ? <TestPage direction={direction} onComplete={handleTestComplete} /> : null;
       case 'result':
         return (
           <ResultPage
             recommendation={recommendation}
             userInfo={{
-              direction,
+              direction: direction || '',
               birthday,
               chineseCalendar: formatChineseDate(chineseCalendar)
             }}

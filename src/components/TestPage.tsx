@@ -9,7 +9,7 @@ interface TestPageProps {
 }
 
 const TestPage: React.FC<TestPageProps> = ({ direction, onComplete }) => {
-  const qs: QuestionItem[] = questionsByDirection[direction] || questionsByDirection['事业'];
+  const qs: QuestionItem[] = questionsByDirection[direction] || questionsByDirection['事业突破'];
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
   const [answers, setAnswers] = useState<number[]>(Array(qs.length).fill(-1));
 

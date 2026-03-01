@@ -61,7 +61,7 @@ const VerificationCode: React.FC<VerificationCodeProps> = ({ onVerify }) => {
   };
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col main-bg overflow-hidden font-sans-zh text-deep-purple antialiased">
+    <div className="relative flex min-h-screen w-full flex-col main-bg overflow-hidden bg-ivory font-sans-zh text-deep-purple antialiased overflow-x-hidden">
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="gem-facet absolute top-[-5%] -left-10 w-48 h-48 rotate-12 opacity-30"></div>
         <div className="gem-facet absolute top-[60%] -right-12 w-40 h-40 -rotate-12 opacity-20"></div>
@@ -90,7 +90,7 @@ const VerificationCode: React.FC<VerificationCodeProps> = ({ onVerify }) => {
         </div>
         <div className="size-10"></div>
       </nav>
-      <div className="relative z-10 flex flex-col items-center flex-1 px-8 pt-12">
+      <main className="relative flex justify-center  z-10  flex-col items-center flex-1 px-8 pt-12">
         <div className="flex flex-col items-center text-center mb-14">
           <div className="w-20 h-20 mb-8 relative">
             <div className="absolute inset-0 bg-white/40 rounded-[2.5rem] blur-2xl"></div>
@@ -107,70 +107,68 @@ const VerificationCode: React.FC<VerificationCodeProps> = ({ onVerify }) => {
             请输入您的专属验证码
           </p>
         </div>
-        <div className="w-full max-w-[280px] space-y-10">
-          <form onSubmit={handleSubmit} noValidate className="w-full max-w-[280px] space-y-10">
-            <div className="relative">
-              <input
-                aria-label="验证码"
-                name="code"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                autoComplete="one-time-code"
-                className="glass-input-large w-full h-16 rounded-2xl border-none text-center text-2xl tracking-[0.5em] text-deep-purple placeholder:text-deep-purple/20 placeholder:tracking-normal focus:ring-0 transition-all font-light"
-                maxLength={4}
-                placeholder="••••"
-                type="text"
-                value={code}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const v = e.target.value.replace(/\D/g, '').slice(0, 4);
-                  setCode(v);
-                }}
-                disabled={loading}
-              />
-              <div className="mt-4 flex justify-center">
-                <button
-                  type="button"
-                  onClick={handleGetCode}
-                  className="text-[11px] text-accent-purple/80 tracking-widest font-medium active:opacity-50 transition-opacity disabled:opacity-50"
-                  disabled={loading}
-                >
-                  {loading ? '正在获取…' : '重新获取验证码'}
-                </button>
-              </div>
-              {hint && (
-                <p className="mt-2 text-center text-[11px] text-accent-purple/70">{hint}</p>
-              )}
-              <p className="mt-1 text-center text-[10px] text-soft-gray">验证码有效期5天，且仅可使用一次</p>
-            </div>
-            <div className="space-y-6">
+        <form onSubmit={handleSubmit} noValidate className="w-full max-w-[280px] space-y-10">
+          <div className="relative">
+            <input
+              aria-label="验证码"
+              name="code"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              autoComplete="one-time-code"
+              className="glass-input-large w-full h-16 rounded-2xl border-none text-center text-2xl tracking-[0.5em] text-deep-purple placeholder:text-deep-purple/20 placeholder:tracking-normal focus:ring-0 transition-all font-light"
+              maxLength={4}
+              placeholder="••••"
+              type="text"
+              value={code}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const v = e.target.value.replace(/\D/g, '').slice(0, 4);
+                setCode(v);
+              }}
+              disabled={loading}
+            />
+            <div className="mt-4 flex justify-center">
               <button
-                type="submit"
-                className={`w-full h-14 rounded-full bg-deep-purple text-white text-base font-medium tracking-[0.25em] shadow-xl shadow-deep-purple/15 transition-all ${canSubmit ? 'active:scale-[0.97]' : 'opacity-50 cursor-not-allowed'}`}
-                disabled={!canSubmit}
+                type="button"
+                onClick={handleGetCode}
+                className="text-[11px] text-accent-purple/80 tracking-widest font-medium active:opacity-50 transition-opacity disabled:opacity-50"
+                disabled={loading}
               >
-                {loading ? '验证中...' : '进入测试'}
+                {loading ? '正在获取…' : '重新获取验证码'}
               </button>
-              <p className="text-center text-[10px] text-soft-gray font-light px-2 leading-relaxed opacity-80">
-                继续操作即代表您已阅读并同意
-                <br />
-                <a
-                  className="underline underline-offset-4 decoration-deep-purple/10 text-deep-purple/50"
-                  href="#"
-                >
-                  服务协议
-                </a>{' '}
-                与{' '}
-                <a
-                  className="underline underline-offset-4 decoration-deep-purple/10 text-deep-purple/50"
-                  href="#"
-                >
-                  隐私政策
-                </a>
-              </p>
             </div>
-          </form>
-        </div>
-      </div>
+            {hint && (
+              <p className="mt-2 text-center text-[11px] text-accent-purple/70">{hint}</p>
+            )}
+            <p className="mt-1 text-center text-[10px] text-soft-gray">验证码有效期5天，且仅可使用一次</p>
+          </div>
+          <div className="space-y-6">
+            <button
+              type="submit"
+              className={`w-full h-14 rounded-full bg-deep-purple text-white text-base font-medium tracking-[0.25em] shadow-xl shadow-deep-purple/15 transition-all ${canSubmit ? 'active:scale-[0.97]' : 'opacity-50 cursor-not-allowed'}`}
+              disabled={!canSubmit}
+            >
+              {loading ? '验证中...' : '进入测试'}
+            </button>
+            <p className="text-center text-[10px] text-soft-gray font-light px-2 leading-relaxed opacity-80">
+              继续操作即代表您已阅读并同意
+              <br />
+              <a
+                className="underline underline-offset-4 decoration-deep-purple/10 text-deep-purple/50"
+                href="#"
+              >
+                服务协议
+              </a>{' '}
+              与{' '}
+              <a
+                className="underline underline-offset-4 decoration-deep-purple/10 text-deep-purple/50"
+                href="#"
+              >
+                隐私政策
+              </a>
+            </p>
+          </div>
+        </form>
+      </main>
       <footer className="relative z-10 pb-12 px-4">
         <div className="flex justify-center gap-10 mb-5 opacity-25">
           <span className="material-symbols-outlined text-deep-purple text-lg font-extralight">
