@@ -21,7 +21,20 @@ export interface JewelryResult {
     火: number;
     土: number;
   };
-  personality: string[];
+  personality: {
+    surface: {
+      title: string;
+      description: string;
+    };
+    innerCore: {
+      title: string;
+      description: string;
+    };
+    truth: {
+      title: string;
+      description: string;
+    };
+  };
   recommendations: {
     name: string;
     benefits: string[];
@@ -60,67 +73,15 @@ class OpenAIService {
     /**
      * ===== System Prompt =====
      */
-    const systemPrompt = `
-你是一位专业首饰顾问。
-风格：温暖、专业、真实可信、可落地。
-避免玄学恐吓式表达。
-`;
+    const systemPrompt = `专业首饰顾问，温暖专业，避免玄学恐吓。`;
 
-    /**
-     * ===== 强制 JSON 输出 =====
-     */
-    const instructionPrompt = `
-你必须仅输出 JSON，不允许输出任何解释文字、Markdown、代码块或额外说明。
+    const instructionPrompt = `输出JSON：{"coreStone":{"name":"","tags":["","",""],"summary":""},"fiveElements":[{"element":"金","analysis":""},{"element":"木","analysis":""},{"element":"水","analysis":""},{"element":"火","analysis":""},{"element":"土","analysis":""}],"fiveElementScore":{"金":0,"木":0,"水":0,"火":0,"土":0},"personality":{"surface":{"title":"","description":""},"innerCore":{"title":"","description":""},"truth":{"title":"","description":""}},"recommendations":[{"name":"","benefits":["","",""],"scene":""},{"name":"","benefits":["","",""],"scene":""},{"name":"","benefits":["","",""],"scene":""}],"materialExplanation":""}
+要求：tags风格如"天生贵人命、晚熟爆发型"；analysis简洁有画面感如"火元素偏弱-行动力易受情绪影响"；五行分数根据八字时辰计算(0-100)；personality三层次(surface/innerCore/truth)需具体场景；recommendations必须是首饰类产品（如手链、项链、戒指、耳环、胸针等），不得推荐非首饰产品；所有字段必填`;
 
-输出格式：
-
-{
-  "coreStone": {
-    "name": "",
-    "tags": ["", "", ""],
-    "summary": ""
-  },
-  "fiveElements": [
-    { "element": "金", "analysis": "" },
-    { "element": "木", "analysis": "" },
-    { "element": "水", "analysis": "" },
-    { "element": "火", "analysis": "" },
-    { "element": "土", "analysis": "" }
-  ],
-  "personality": ["", "", ""],
-  "recommendations": [
-    {
-      "name": "",
-      "benefits": ["", "", ""],
-      "scene": ""
-    },
-    {
-      "name": "",
-      "benefits": ["", "", ""],
-      "scene": ""
-    }
-  ],
-  "materialExplanation": ""
-}
-
-要求：
-- 必须是合法 JSON
-- 所有字段都必须填写
-- 禁止输出任何额外文本
-`;
-
-    /**
-     * ===== 用户信息 =====
-     */
-    const userPrompt = `
-用户信息：
-生日：${birthday}
-天干地支：${chineseCalendar.heavenlyStem}${chineseCalendar.earthlyBranch}年 ${chineseCalendar.zodiac}年 ${chineseCalendar.fiveElement}命
-关注方向：${dirKey}
-性别：${gender}
-性格测试明细：
-${qaLines}
-`;
+    const userPrompt = `生日：${birthday}
+八字：${chineseCalendar.heavenlyStem}${chineseCalendar.earthlyBranch}年${chineseCalendar.zodiac}${chineseCalendar.fiveElement}命，${chineseCalendar.hourStem}${chineseCalendar.hourBranch}时${chineseCalendar.hourZodiac}
+方向：${dirKey}，性别：${gender}
+答题：${qaLines}`;
 
     try {
       const apiKey = process.env.DEEPSEEK_API_KEY;
@@ -133,12 +94,12 @@ ${qaLines}
           { role: 'user', content: instructionPrompt },
           { role: 'user', content: userPrompt }
         ],
-        temperature: 0.4, // 降低随机性
-        max_tokens: 1500
+        temperature: 0.3,
+        max_tokens: 1200
       };
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000);
+      const timeoutId = setTimeout(() => controller.abort(), 20000);
 
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -193,7 +154,7 @@ ${qaLines}
     return {
       coreStone: {
         name: '黄水晶',
-        tags: ['稳健成长型', '务实理性', '长期积累者'],
+        tags: ['天生贵人命', '厚积薄发型', '财富积累者'],
         summary: '你属于稳扎稳打型人格，适合长期布局型能量。'
       },
       fiveElements: [
@@ -208,11 +169,20 @@ ${qaLines}
         火: 45,
         土: 80
       },
-      personality: [
-        '表面冷静理性',
-        '内心敏感细腻',
-        'keywords关键字'
-      ],
+      personality: {
+        surface: {
+          title: '理性克制',
+          description: '你给人的第一印象是冷静、稳重、有条理。在工作和社交场合中，你总是能够保持情绪稳定，用逻辑分析问题，很少冲动行事。同事和朋友都认为你是一个可靠的人，遇到困难时，你总是能够冷静地找到解决方案。'
+        },
+        innerCore: {
+          title: '渴望认可',
+          description: '在内心深处，你其实非常在意他人的看法和评价。你努力追求完美，希望得到周围人的认可和赞赏。当你感到被忽视或批评时，内心会产生强烈的焦虑和不安。你常常为了满足他人的期待而压抑自己的真实感受。'
+        },
+        truth: {
+          title: '平衡之道',
+          description: '你的表面理性和内核敏感看似矛盾，实则是一种平衡。理性是你的保护色，让你在复杂的环境中生存；而敏感是你的天赋，让你能够深刻地理解他人。真正的成长不是抛弃其中任何一面，而是学会在理性与感性之间找到平衡，既保持冷静的判断力，又接纳自己真实的情感需求。'
+        }
+      },
       recommendations: [
         {
           name: '黄水晶手链',

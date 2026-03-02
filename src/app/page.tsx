@@ -40,10 +40,10 @@ export default function Home() {
     setPageState('birthday');
   };
 
-  const handleBirthdaySubmit = (year: number, month: number, day: number, genderValue: string) => {
-    const calendarInfo = calculateChineseCalendar(year, month, day);
+  const handleBirthdaySubmit = (year: number, month: number, day: number, hour: number, genderValue: string) => {
+    const calendarInfo = calculateChineseCalendar(year, month, day, hour);
     setChineseCalendar(calendarInfo);
-    setBirthday(`${year}-${month}-${day}`);
+    setBirthday(`${year}-${month}-${day} ${hour}:00`);
     setGender(genderValue);
     setPageState('direction');
   };

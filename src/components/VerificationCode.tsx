@@ -101,7 +101,7 @@ const VerificationCode: React.FC<VerificationCodeProps> = ({ onVerify }) => {
             </div>
           </div>
           <h1 className="font-serif-zh text-deep-purple text-2xl tracking-[0.15em] mb-4">
-            开启定制旅程
+            开始测试您的专属首饰
           </h1>
           <p className="text-soft-gray text-xs font-light tracking-[0.1em] leading-relaxed">
             请输入您的专属验证码
@@ -126,7 +126,7 @@ const VerificationCode: React.FC<VerificationCodeProps> = ({ onVerify }) => {
               }}
               disabled={loading}
             />
-            <div className="mt-4 flex justify-center">
+            {/* <div className="mt-4 flex justify-center">
               <button
                 type="button"
                 onClick={handleGetCode}
@@ -135,11 +135,11 @@ const VerificationCode: React.FC<VerificationCodeProps> = ({ onVerify }) => {
               >
                 {loading ? '正在获取…' : '重新获取验证码'}
               </button>
-            </div>
+            </div> */}
             {hint && (
               <p className="mt-2 text-center text-[11px] text-accent-purple/70">{hint}</p>
             )}
-            <p className="mt-1 text-center text-[10px] text-soft-gray">验证码有效期5天，且仅可使用一次</p>
+            <p className="mt-2 text-center text-[10px] text-soft-gray">验证码有效期5天，请尽快完成测试</p>
           </div>
           <div className="space-y-6">
             <button

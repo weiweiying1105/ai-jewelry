@@ -3,23 +3,55 @@
 import React, { useState } from 'react';
 
 interface BirthdaySelectorProps {
-  onSubmit: (year: number, month: number, day: number, gender: string) => void;
+  onSubmit: (year: number, month: number, day: number, hour: number, gender: string) => void;
 }
 
 const BirthdaySelector: React.FC<BirthdaySelectorProps> = ({ onSubmit }) => {
   const [year, setYear] = useState<number>(new Date().getFullYear());
   const [month, setMonth] = useState<number>(1);
   const [day, setDay] = useState<number>(1);
+  const [hour, setHour] = useState<number>(12);
   const [gender, setGender] = useState<string>('女');
 
   const years = Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i);
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
   const getDaysInMonth = (y: number, m: number) => new Date(y, m, 0).getDate();
   const days = Array.from({ length: getDaysInMonth(year, month) }, (_, i) => i + 1);
+  
+  const hours = Array.from({ length: 24 }, (_, i) => i);
+  const getShichen = (h: number) => {
+    const shichenMap: Record<number, string> = {
+      0: '子时 (23:00-01:00)',
+      1: '子时 (23:00-01:00)',
+      2: '丑时 (01:00-03:00)',
+      3: '丑时 (01:00-03:00)',
+      4: '寅时 (03:00-05:00)',
+      5: '寅时 (03:00-05:00)',
+      6: '卯时 (05:00-07:00)',
+      7: '卯时 (05:00-07:00)',
+      8: '辰时 (07:00-09:00)',
+      9: '辰时 (07:00-09:00)',
+      10: '巳时 (09:00-11:00)',
+      11: '巳时 (09:00-11:00)',
+      12: '午时 (11:00-13:00)',
+      13: '午时 (11:00-13:00)',
+      14: '未时 (13:00-15:00)',
+      15: '未时 (13:00-15:00)',
+      16: '申时 (15:00-17:00)',
+      17: '申时 (15:00-17:00)',
+      18: '酉时 (17:00-19:00)',
+      19: '酉时 (17:00-19:00)',
+      20: '戌时 (19:00-21:00)',
+      21: '戌时 (19:00-21:00)',
+      22: '亥时 (21:00-23:00)',
+      23: '亥时 (21:00-23:00)'
+    };
+    return shichenMap[h];
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(year, month, day, gender);
+    onSubmit(year, month, day, hour, gender);
   };
 
   return (
@@ -115,6 +147,25 @@ const BirthdaySelector: React.FC<BirthdaySelectorProps> = ({ onSubmit }) => {
                 </div>
               </div>
               <p className="text-[11px] text-muted-gray text-center px-4 italic">生日将决定您的生辰石与幸运色调</p>
+            </section>
+
+            <section className="space-y-4">
+              <h3 className="text-sm font-semibold text-deep-blue/60 ml-1">出生时间</h3>
+              <div className="relative glass-card rounded-3xl p-4 overflow-hidden">
+                <div>
+                  <label className="block text-xs font-medium text-muted-gray mb-2">时辰（影响八字命理分析）</label>
+                  <select
+                    value={hour}
+                    onChange={(e) => setHour(parseInt(e.target.value))}
+                    className="w-full rounded-2xl bg-white/70 border border-accent-blue/10 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-accent-blue/40"
+                  >
+                    {hours.map((h) => (
+                      <option key={h} value={h}>{getShichen(h)}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <p className="text-[11px] text-muted-gray text-center px-4 italic">时辰将影响八字命理分析的准确性</p>
             </section>
           </div>
         </main>

@@ -37,22 +37,30 @@ function transformResult(result: any) {
       }))
     : [];
 
+  const fiveElementsData = result?.fiveElementScore 
+    ? Object.entries(result.fiveElementScore).map(([element, value]) => ({
+        element,
+        value: value as number
+      }))
+    : [];
+
   return {
     coreConclusion: {
       tags: Array.isArray(result?.coreStone?.tags) ? result.coreStone.tags : [],
       insight: result?.coreStone?.summary || '',
       stone: result?.coreStone?.name || ''
     },
-    personality: '',
+    personality: result?.personality || '',
     elements,
     elementsItems,
+    fiveElementsData,
     psychologicalAnalysis: {
-      currentState: (result?.personality?.[0] || '').trim(),
-      personalityDuality: (result?.personality?.[2] || '').trim(),
-      logicConnection: (result?.personality?.[1] || '').trim(),
-      surface: (result?.personality?.[0] || '').trim(),
-      innerCore: (result?.personality?.[1] || '').trim(),
-      truth: (result?.personality?.[2] || '').trim()
+      currentState: result?.personality?.surface?.title || '',
+      personalityDuality: result?.personality?.truth?.title || '',
+      logicConnection: result?.personality?.innerCore?.title || '',
+      surface: result?.personality?.surface?.title || '',
+      innerCore: result?.personality?.innerCore?.title || '',
+      truth: result?.personality?.truth?.title || ''
     },
     recommendations,
     transportationAdvice: '',

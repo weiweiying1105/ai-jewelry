@@ -61,3 +61,7 @@ body {
     rgba(255, 255, 255, 0.85) 100%
   );
 }
+.text-text-sub{
+ --tw-text-opacity: 1;
+    color: rgb(99 110 114 / var(--tw-text-opacity, 1));
+}

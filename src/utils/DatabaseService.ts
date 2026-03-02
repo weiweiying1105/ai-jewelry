@@ -141,8 +141,6 @@ class DatabaseService {
       const result = await this.pool.query(query, [code]);
 
       if (result.rows.length > 0) {
-        // 删除已使用的验证码
-        await this.pool.query('DELETE FROM verification_codes WHERE id = $1', [result.rows[0].id]);
         return true;
       }
 
@@ -166,8 +164,6 @@ class DatabaseService {
     );
 
     if (codeIndex !== -1) {
-      // 删除已使用的验证码
-      this.memoryCodes.splice(codeIndex, 1);
       return true;
     }
 
