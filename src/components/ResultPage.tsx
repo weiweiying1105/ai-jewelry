@@ -137,12 +137,12 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userInfo }) => 
           ) : (
             <>
               {/* 第一屏：你的守护石 + 三个身份标签 */}
-              <section className="relative pt-12 pb-8 px-8 flex flex-col items-center text-center">
+              <section className="relative pt-4 pb-8 px-8 flex flex-col items-center text-center">
                 <div className="mb-6">
                   <p className="text-[11px] tracking-[0.4em] text-mystic-purple/60 uppercase mb-2 font-bold">The Guardian Oracle</p>
-                  <h2 className="font-serif text-2xl text-mystic-purple tracking-[0.2em] flex items-center justify-center gap-3">
+                  <h2 className="font-serif text-2xl text-mystic-purple tracking-[0.2em] flex items-center justify-center gap-3 text-center">
                     <span className="w-6 h-[1px] bg-mystic-purple/20"></span>
-                    开运守护石：{guardianStoneName}
+                    开运守护石<br/>{guardianStoneName}
                     <span className="w-6 h-[1px] bg-mystic-purple/20"></span>
                   </h2>
                 </div>
@@ -159,7 +159,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userInfo }) => 
                   </div>
                   {/* 图片装饰移除，全部数据来自接口 */}
                   <div className="relative w-full aspect-square flex flex-col items-center justify-center mb-12">
-                    <div className="absolute inset-0 flex items-center justify-center opacity-80 pointer-events-none">
+                    <div className="absolute inset-0 flex items-center justify-center opacity-80 pointer-events-none radius-50%">
                       <img alt="Spirit Gem" className="w-64 h-64 object-cover rounded-full mix-blend-multiply blur-xl opacity-30" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiuPAS8B5dGerJEPBJPGwr1zbw0CiQ4s8Yrgp_9W9Mc8CI7i8igTLF6_cnFqAk0zFZcY4ubqj270yODgNTs0BFYvHctdqAwnx5Jn2AuftZDLzCOrpSs1wk8zh48kod31CpqdHwmiGydrPsOowNA3qd5BaX4c38UWc0juP0z-3ofd0FbfpDMk6zxQN055tGWuX2UOVYdq0bour53HRAWqzb0dguCk6Z5b2AOL0aEWTWoxWNKY1ynBqDtp-xq3QJADGzJIu7JqO3VBQ" />
                     </div>
                     <div className="relative z-10 flex flex-col gap-6">

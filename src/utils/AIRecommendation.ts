@@ -7,6 +7,15 @@ export interface UserData {
   birthday: string;
   gender: string;
 }
+import { ChineseCalendarInfo } from './ChineseCalendar';
+
+export interface UserData {
+  chineseCalendar: ChineseCalendarInfo;
+  direction: string;
+  answers: number[];
+  birthday: string;
+  gender: string;
+}
 
 export interface Recommendation {
   coreConclusion: {
@@ -42,44 +51,12 @@ export const getAIRecommendation = async (userData: UserData): Promise<Recommend
       body: JSON.stringify(userData),
     });
     const data = await response.json();
-    
     if (data.error) {
-      return {
-        coreConclusion: {
-          tags: [],
-          insight: ''
-        },
-        personality: '',
-        elements: [],
-        psychologicalAnalysis: {
-          currentState: '',
-          personalityDuality: '',
-          logicConnection: ''
-        },
-        transportationAdvice: '',
-        jewelryDecision: '',
-        error: data.error
-      } as Recommendation;
+      return { ...data, error: data.error } as Recommendation;
     }
-    
     return data as Recommendation;
   } catch (error) {
     console.error('Error getting AI recommendation:', error);
-    return {
-      coreConclusion: {
-        tags: [],
-        insight: ''
-      },
-      personality: '',
-      elements: [],
-      psychologicalAnalysis: {
-        currentState: '',
-        personalityDuality: '',
-        logicConnection: ''
-      },
-      transportationAdvice: '',
-      jewelryDecision: '',
-      error: '很抱歉，推荐生成失败，请稍后重试。建议您根据自己的喜好选择适合的首饰。'
-    } as Recommendation;
+    return { error: '很抱歉，推荐生成失败，请稍后重试。建议您根据自己的喜好选择适合的首饰。' } as Recommendation;
   }
 };
