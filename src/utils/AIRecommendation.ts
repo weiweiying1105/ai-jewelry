@@ -7,15 +7,6 @@ export interface UserData {
   birthday: string;
   gender: string;
 }
-import { ChineseCalendarInfo } from './ChineseCalendar';
-
-export interface UserData {
-  chineseCalendar: ChineseCalendarInfo;
-  direction: string;
-  answers: number[];
-  birthday: string;
-  gender: string;
-}
 
 export interface Recommendation {
   coreConclusion: {
