@@ -27,7 +27,6 @@ export default function Home() {
       insight: ''
     },
     personality: '',
-    fatePattern: '',
     psychologicalAnalysis: {
       currentState: '',
       personalityDuality: '',
@@ -60,7 +59,7 @@ export default function Home() {
     // 生成AI推荐
     const userData = {
       chineseCalendar,
-      direction,
+      direction: direction || '',
       answers: userAnswers,
       birthday,
       gender,
@@ -78,7 +77,6 @@ export default function Home() {
           insight: ''
         },
         personality: '',
-        fatePattern: '',
         psychologicalAnalysis: {
           currentState: '',
           personalityDuality: '',

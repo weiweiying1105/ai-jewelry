@@ -21,7 +21,7 @@ interface ResultPageProps {
       stone?: string;
     };
     personality: string;
-    fatePattern: string;
+    fatePattern?: string;
     elements?: string[];
     psychologicalAnalysis: {
       currentState: string;
