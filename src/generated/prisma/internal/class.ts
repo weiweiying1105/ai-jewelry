@@ -17,8 +17,8 @@ import type * as Prisma from "./prismaNamespace"
 
 const config: runtime.GetPrismaClientConfig = {
   "previewFeatures": [],
-  "clientVersion": "7.4.1",
-  "engineVersion": "55ae170b1ced7fc6ed07a15f110549408c501bb3",
+  "clientVersion": "7.4.2",
+  "engineVersion": "94a226be1cf2967af2541cca5529f0f7ba866919",
   "activeProvider": "postgresql",
   "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel VerificationCode {\n  id        Int      @id @default(autoincrement())\n  code      String   @db.VarChar(10)\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  expiresAt DateTime @map(\"expires_at\")\n\n  @@map(\"verification_codes\")\n}\n",
   "runtimeDataModel": {
@@ -67,7 +67,9 @@ export interface PrismaClientConstructor {
    * Type-safe database client for TypeScript
    * @example
    * ```
-   * const prisma = new PrismaClient()
+   * const prisma = new PrismaClient({
+   *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+   * })
    * // Fetch zero or more VerificationCodes
    * const verificationCodes = await prisma.verificationCode.findMany()
    * ```
@@ -89,7 +91,9 @@ export interface PrismaClientConstructor {
  * Type-safe database client for TypeScript
  * @example
  * ```
- * const prisma = new PrismaClient()
+ * const prisma = new PrismaClient({
+ *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+ * })
  * // Fetch zero or more VerificationCodes
  * const verificationCodes = await prisma.verificationCode.findMany()
  * ```
