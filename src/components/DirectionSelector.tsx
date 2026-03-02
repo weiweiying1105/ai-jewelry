@@ -12,9 +12,9 @@ const DirectionSelector: React.FC<DirectionSelectorProps> = ({ onSelect }) => {
   const [selectedDirection, setSelectedDirection] = useState<Direction | null>(null);
 
   const options: { key: Direction; title: string; subtitle: string; icon: string }[] = [
+     { key: '财运提升', title: '财富运势', subtitle: '洞察您的财运趋势与机遇', icon: 'payments' },
     { key: '爱情姻缘', title: '婚姻情感', subtitle: '探索您的情感归宿与良缘', icon: 'favorite' },
     { key: '事业突破', title: '事业发展', subtitle: '解析您的职业路径与晋升', icon: 'work' },
-    { key: '财运提升', title: '财富运势', subtitle: '洞察您的财运趋势与机遇', icon: 'payments' },
     { key: '考试运', title: '学业考运', subtitle: '助力您的学术表现与考运', icon: 'school' },
     { key: '贵人运', title: '人际关系', subtitle: '提升人脉与沟通协作', icon: 'groups' },
     { key: '能量平衡', title: '身心健康', subtitle: '关注体质与心理平衡', icon: 'monitor_heart' },

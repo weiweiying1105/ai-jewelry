@@ -123,7 +123,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userInfo }) => 
     <div className="flex flex-col items-center justify-center min-h-screen  bg-gray-50">
       <div className="relative w-full max-w-[430px] mx-auto bg-[var(--bg-gradient)] shadow-2xl overflow-x-hidden rounded-2xl">
         <header className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 bg-white/30 backdrop-blur-md border-b border-white/20">
-          <button onClick={() => router.back()} className="size-10 flex items-center justify-center bg-white/60 rounded-full shadow-sm">
+          <button onClick={() => window.location.reload()} className="size-10 flex items-center justify-center bg-white/60 rounded-full shadow-sm">
             <span className="material-symbols-outlined text-xl">chevron_left</span>
           </button>
           <h1 className="font-serif font-bold text-mystic-purple tracking-widest text-sm">你的解析报告</h1>

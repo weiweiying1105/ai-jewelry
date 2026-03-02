@@ -75,9 +75,7 @@ class OpenAIService {
      */
     const systemPrompt = `专业首饰顾问，温暖专业，避免玄学恐吓。`;
 
-        const instructionPrompt = `输出JSON：{"coreStone":{"name":"","tags":["","",""],"summary":""},"fiveElements":[{"element":"金","analysis":""},{"element":"木","analysis":""},{"element":"水","analysis":""},{"element":"火","analysis":""},{"element":"土","analysis":""}],"fiveElementScore":{"金":0,"木":0,"水":0,"火":0,"土":0},"personality":{"surface":{"title":"","description":""},"innerCore":{"title":"","description":""},"truth":{"title":"","description":""}},"recommendations":[{"name":"","benefits":["","",""],"scene":""},{"name":"","benefits":["","",""],"scene":""},{"name":"","benefits":["","",""],"scene":""}],"materialExplanation":""}
-要求：tags风格如"天生贵人命、晚熟爆发型"；analysis简洁有画面感如"火元素偏弱-行动力易受情绪影响"；五行分数根据八字年柱计算(0-100)；personality三层次(surface/innerCore/truth)需具体场景；recommendations必须是首饰类产品（如手链、项链、戒指、耳环、胸针等），不得推荐非首饰产品；所有字段必填`;
-
+    const instructionPrompt = `输出JSON：{"coreStone":{"name":"","tags":["","",""],"summary":""},"fiveElements":[{"element":"金","analysis":""},{"element":"木","analysis":""},{"element":"水","analysis":""},{"element":"火","analysis":""},{"element":"土","analysis":""}],"fiveElementScore":{"金":0,"木":0,"水":0,"火":0,"土":0},"personality":{"surface":{"title":"","description":""},"innerCore":{"title":"","description":""},"truth":{"title":"","description":""}},"recommendations":[{"name":"","benefits":["","",""],"scene":""},{"name":"","benefits":["","",""],"scene":""},{"name":"","benefits":["","",""],"scene":""}],"materialExplanation":""}。要求：1.recommendations和守护石/材质必须多样化，避免频繁推荐月光石、黄水晶等常见石头，不是还有紫水晶，石榴石这些？你发散一下，优先结合五行、性格、答题结果推荐不同宝石或材质；2.tags风格如“天生贵人命、晚熟爆发型”；3.analysis简洁有画面感如“火元素偏弱-行动力易受情绪影响”；4.五行分数根据八字年柱计算(0-100)；5.personality三层次(surface/innerCore/truth)需具体场景；6.recommendations必须是首饰类产品（如手链、项链、戒指、耳环、胸针等），不得推荐非首饰产品；7.所有字段必填。`;
     const userPrompt = `生日：${birthday}
 八字：${chineseCalendar.heavenlyStem}${chineseCalendar.earthlyBranch}年${chineseCalendar.zodiac}${chineseCalendar.fiveElement}命
 方向：${dirKey}，性别：${gender}
