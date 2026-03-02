@@ -8,7 +8,7 @@ export default defineConfig({
   migrations: {
     path: "prisma/migrations",
   },
-  generator: {
+  generators: {
     client: {
       output: "src/generated/prisma",
     },
