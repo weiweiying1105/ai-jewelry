@@ -223,13 +223,6 @@ const ChildResultPage: React.FC<ChildResultPageProps> = ({ answers, psychologyRe
               <p className="text-4xl font-bold text-indigo-800 mb-2">{result['原生家庭影响指数']}%</p>
               <p className="text-indigo-600 text-sm">你的很多行为模式，可能来自成长环境的长期塑造</p>
             </div>
-            {/* <div className="flex flex-wrap gap-2 justify-center">
-              {result.性格关键词.map((keyword, index) => (
-                <span key={index} className="px-3 py-1 bg-indigo-100 text-indigo-700 text-sm rounded-full">
-                  {keyword}
-                </span>
-              ))}
-            </div> */}
           </section>
 
           {/* ③ 依恋类型 */}
