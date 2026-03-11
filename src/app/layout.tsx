@@ -13,7 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "专属心理测试",
+  title: {
+    default: "心灵探索 - 专属心理测试",
+    template: "探索您的灵性首饰"
+  },
   description: "探索你的内心世界，发现独特的心理特质，专属心理测试为你揭示隐藏的自我",
 };
 
